@@ -7,10 +7,21 @@
 #include <math.h>
 #include <iostream>
 #include <fstream>
+#include <memory>
 
-#include "../OptFrame/Util/RandGenMersenneTwister.hpp"
+// Breaking
+//#include "../OptFrame/Heuristics/SA/BasicSimulatedAnnealing.hpp"
+#include "../OptFrame/Heuristics/EvolutionaryAlgorithms/BRKGA.hpp"
+//#include "../OptFrame/Heuristics/GRASP/BasicGRASP.hpp"
 
+//#include "../OptFrame/Heuristics/VNS/BasicVNS.hpp"
+#include "../OptFrame/Heuristics/LocalSearches/BestImprovement.hpp"
+#include "../OptFrame/Heuristics/LocalSearches/FirstImprovement.hpp"
+#include "../OptFrame/Heuristics/LocalSearches/HillClimbing.hpp"
+#include "../OptFrame/Heuristics/LocalSearches/RandomDescentMethod.hpp"
 #include "../OptFrame/Util/CheckCommand.hpp"
+#include "../OptFrame/Util/RandGenMersenneTwister.hpp"
+#include "../OptFrame/Util/printable.h"
 
 #include "NPP.h"
 
@@ -18,36 +29,41 @@ using namespace std;
 using namespace optframe;
 using namespace NPP;
 
-int main(int argc, char **argv)
-{
-   RandGenMersenneTwister rg; // not using system rand() anymore
-   
-   // Initialize here all your OptFrame components 
-   // (ProblemInstance, Evaluator, Constructive, ...)
+int main(int argc, char **argv) {
+    RandGenMersenneTwister rg; // not using system rand() anymore
 
-   auto *ifs = new std::ifstream("example.in", std::ifstream::in);
-   Scanner scanner(ifs);
-   ProblemInstance p(scanner);
+    // Initialize here all your OptFrame components
+    // (ProblemInstance, Evaluator, Constructive, ...)
 
-   MyEvaluator ev(p);
+    unique_ptr <ifstream> ifs(new std::ifstream("input/example.in", std::ifstream::in));
+    Scanner scanner(ifs.get());
+    ProblemInstance p(scanner);
+    ifs->close();
 
-   NSSeq2Opt ns1(p, rg);
-   NSSeqSwap ns2(p, rg);
+    MyEvaluator ev(p);
 
-   ConstructiveGreedy c1(p);
-   ConstructiveRand c2(p);
+    NSSeq2Opt ns1(p, rg);
+    NSSeqSwap ns2(p, rg);
 
-   CheckCommand<RepNPP> check;
-   check.add(ev);
-   check.add(c1);
-   check.add(c2);
-   check.add(ns1);
-   check.add(ns2);
+    ConstructiveGreedy c1(p);
+    ConstructiveRand c2(p);
 
-   check.run(10,10);
+    CheckCommand<RepNPP> check;
+    check.add(ev);
+    check.add(c1);
+    check.add(c2);
+    check.add(ns1);
+    check.add(ns2);
 
-   cout << "Program ended successfully" << endl;
-   ifs->close();
-   
-   return 0;
+    check.run(10, 10);
+
+    cout << "Program ended successfully" << endl;
+
+    NSSeq<RepNPP> *nsseq_bit = &ns1;
+
+//    BasicSimulatedAnnealing <RepNPP, MY_ADS> sa(ev, c1, *nsseq_bit, 0.98, 100, 900.0, rg);
+//    BasicGRASP<RepNPP, MY_ADS> g(ev, grC, emptyLS, alphaBuilder, 100000);
+//    VNS<RepNPP> vns;
+
+    return 0;
 }

@@ -2,10 +2,10 @@
 #define NPP_REPRESENTATION_H_
 
 #include <vector>
+
 #include "../../OptFrame/Util/printable.h"
-
 #include "../../OptFrame/Util/Matrix.hpp"
-
+#include "../../OptFrame/Solution.hpp"
 #include "../../OptFrame/Solutions/CopySolution.hpp"
 
 
@@ -16,11 +16,13 @@ using namespace std;
 using namespace optframe;
 
 // Solution Representation
-using RepNPP = std::vector < int > ;
+using RepNPP = std::vector<int>;
 
 using SolutionNPP = CopySolution<RepNPP>;
 
 // Remember that RepNPP must implement: (i) copy constructor and (ii) operator<<
+
+using MY_ADS = OPTFRAME_DEFAULT_ADS;
 
 // Auxiliary Data Structures (default 'int')
 //typedef int MY_ADS; // maybe try again in the future something like ADSNPP...
