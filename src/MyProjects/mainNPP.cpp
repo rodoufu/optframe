@@ -3,23 +3,26 @@
 // Project NumberPartitionProblem
 // ===================================
 
-#include <stdlib.h>
-#include <math.h>
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <utility>
+
+#include <stdlib.h>
+#include <math.h>
 
 // Breaking
-//#include "../OptFrame/Heuristics/SA/BasicSimulatedAnnealing.hpp"
-#include "../OptFrame/Heuristics/EvolutionaryAlgorithms/BRKGA.hpp"
+//#include "../OptFrame/Heuristics/EvolutionaryAlgorithms/BRKGA.hpp"
 //#include "../OptFrame/Heuristics/GRASP/BasicGRASP.hpp"
 
 //#include "../OptFrame/Heuristics/VNS/BasicVNS.hpp"
+#include "../OptFrame/Heuristics/SA/BasicSimulatedAnnealing.hpp"
 #include "../OptFrame/Heuristics/LocalSearches/BestImprovement.hpp"
 #include "../OptFrame/Heuristics/LocalSearches/FirstImprovement.hpp"
 #include "../OptFrame/Heuristics/LocalSearches/HillClimbing.hpp"
 #include "../OptFrame/Heuristics/LocalSearches/RandomDescentMethod.hpp"
 #include "../OptFrame/Util/CheckCommand.hpp"
+#include "../OptFrame/SingleObjSearch.hpp"
 #include "../OptFrame/Util/RandGenMersenneTwister.hpp"
 #include "../OptFrame/Util/printable.h"
 
@@ -61,7 +64,12 @@ int main(int argc, char **argv) {
 
     NSSeq<RepNPP> *nsseq_bit = &ns1;
 
-//    BasicSimulatedAnnealing <RepNPP, MY_ADS> sa(ev, c1, *nsseq_bit, 0.98, 100, 900.0, rg);
+    BasicSimulatedAnnealing <RepNPP, MY_ADS> sa(ev, c1, *nsseq_bit, 0.98, 100, 900.0, rg);
+    SOSC sosc; // stop criteria
+    pair<SolutionNPP, Evaluation>* r = sa.search(sosc);
+    r->first.print();
+    r->second.print();
+    delete r;
 //    BasicGRASP<RepNPP, MY_ADS> g(ev, grC, emptyLS, alphaBuilder, 100000);
 //    VNS<RepNPP> vns;
 
