@@ -2,8 +2,8 @@
 
 all: mctAppNPP
 
-mctAppNPP:      mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPNSSeq2Opt.o   NPPScanner.o  NPPNSSeqSwap.o   NPPConstructiveRand.o
-	g++ $(GCC_FLAGS) mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPNSSeq2Opt.o   NPPScanner.o   NPPNSSeqSwap.o   NPPConstructiveRand.o -o app_NPP
+mctAppNPP:      mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPScanner.o  NPPConstructiveRand.o NPPNSSeqBitFlip.o
+	g++ $(GCC_FLAGS) mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPScanner.o   NPPConstructiveRand.o NPPNSSeqBitFlip.o -o app_NPP
 
 mainNPP.o: mainNPP.cpp  NPP/Representation.h 
 	g++ -c $(GCC_FLAGS) mainNPP.cpp -o mainNPP.o
@@ -20,11 +20,8 @@ NPPConstructiveGreedy.o: NPP/ConstructiveGreedy.cpp NPP/ConstructiveGreedy.h
 NPPConstructiveRand.o: NPP/ConstructiveRand.cpp NPP/ConstructiveRand.h
 	g++ -c $(GCC_FLAGS) NPP/ConstructiveRand.cpp -o NPPConstructiveRand.o
 
-NPPNSSeq2Opt.o: NPP/NSSeq2Opt.cpp NPP/NSSeq2Opt.h
-	g++ -c $(GCC_FLAGS) NPP/NSSeq2Opt.cpp -o NPPNSSeq2Opt.o
-
-NPPNSSeqSwap.o: NPP/NSSeqSwap.cpp NPP/NSSeqSwap.h
-	g++ -c $(GCC_FLAGS) NPP/NSSeqSwap.cpp -o NPPNSSeqSwap.o
+NPPNSSeqBitFlip.o: NPP/NSSeqBitFlip.cpp NPP/NSSeqBitFlip.h
+	g++ -c $(GCC_FLAGS) NPP/NSSeqBitFlip.cpp -o NPPNSSeqBitFlip.o
 	
 NPPScanner.o: ../OptFrame/Scanner++/Scanner.cpp
 	g++ -c $(GCC_FLAGS) ../OptFrame/Scanner++/Scanner.cpp -o NPPScanner.o

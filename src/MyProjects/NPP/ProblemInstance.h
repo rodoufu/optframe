@@ -8,7 +8,6 @@
 #include "../../OptFrame/Scanner++/Scanner.h"
 #include "../../OptFrame/Component.hpp"
 
-using namespace std;
 using namespace scannerpp;
 using namespace optframe;
 
@@ -19,7 +18,7 @@ class ProblemInstance : public Component
 {
 private:
 	int size;
-	vector<int> numbers;
+	std::vector<int> numbers;
 
 public:
 	ProblemInstance(Scanner& scanner);

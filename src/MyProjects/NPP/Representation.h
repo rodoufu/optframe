@@ -17,7 +17,7 @@ using namespace std;
 using namespace optframe;
 
 // Solution Representation
-using RepNPP = std::vector<int>;
+using RepNPP = std::vector<bool>;
 
 using SolutionNPP = CopySolution<RepNPP>;
 

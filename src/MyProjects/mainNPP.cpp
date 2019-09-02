@@ -41,8 +41,9 @@ int main(int argc, char **argv) {
 
     MyEvaluator ev(p);
 
-    NSSeq2Opt ns1(p, rg);
-    NSSeqSwap ns2(p, rg);
+    NSSeqBitFlip ns1(p, rg);
+//    NSSeq2Opt ns1(p, rg);
+//    NSSeqSwap ns2(p, rg);
 
     ConstructiveGreedy c1(p);
     ConstructiveRand c2(p);
@@ -52,13 +53,13 @@ int main(int argc, char **argv) {
     check.add(c1);
     check.add(c2);
     check.add(ns1);
-    check.add(ns2);
+//    check.add(ns2);
 
     check.run(10, 10);
 
     NSSeq<RepNPP> *nsseq_bit = &ns1;
 
-    BasicSimulatedAnnealing <RepNPP, MY_ADS> sa(ev, c1, *nsseq_bit, 0.98, 100, 900.0, rg);
+    BasicSimulatedAnnealing <RepNPP, MY_ADS> sa(ev, c2, *nsseq_bit, 0.98, 100, 900.0, rg);
     SOSC sosc; // stop criteria
     unique_ptr<pair<SolutionNPP, Evaluation>> r(sa.search(sosc));
     r->first.print();
