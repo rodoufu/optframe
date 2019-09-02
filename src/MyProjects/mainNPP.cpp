@@ -12,10 +12,6 @@
 #include <math.h>
 
 // Breaking
-//#include "../OptFrame/Heuristics/EvolutionaryAlgorithms/BRKGA.hpp"
-//#include "../OptFrame/Heuristics/GRASP/BasicGRASP.hpp"
-
-//#include "../OptFrame/Heuristics/VNS/BasicVNS.hpp"
 #include "../OptFrame/Heuristics/SA/BasicSimulatedAnnealing.hpp"
 #include "../OptFrame/Heuristics/LocalSearches/BestImprovement.hpp"
 #include "../OptFrame/Heuristics/LocalSearches/FirstImprovement.hpp"
@@ -60,18 +56,27 @@ int main(int argc, char **argv) {
 
     check.run(10, 10);
 
-    cout << "Program ended successfully" << endl;
-
     NSSeq<RepNPP> *nsseq_bit = &ns1;
 
     BasicSimulatedAnnealing <RepNPP, MY_ADS> sa(ev, c1, *nsseq_bit, 0.98, 100, 900.0, rg);
     SOSC sosc; // stop criteria
-    pair<SolutionNPP, Evaluation>* r = sa.search(sosc);
+    unique_ptr<pair<SolutionNPP, Evaluation>> r(sa.search(sosc));
     r->first.print();
     r->second.print();
-    delete r;
-//    BasicGRASP<RepNPP, MY_ADS> g(ev, grC, emptyLS, alphaBuilder, 100000);
-//    VNS<RepNPP> vns;
+
+    BestImprovement<RepNPP, MY_ADS> bi(ev, ns1);
+    FirstImprovement<RepNPP, MY_ADS> fi(ev, ns1);
+    HillClimbing<RepNPP, MY_ADS> sd(ev, bi);
+    HillClimbing<RepNPP, MY_ADS> pm(ev, fi);
+    RandomDescentMethod<RepNPP, MY_ADS> rdm(ev, ns1, 10);
+
+    auto sol = r->first;
+    Evaluation e = ev.evaluate(sol.getR(), sol.getADSptr());
+    sd.search(sol, e, sosc).second.print();
+    pm.search(sol, e, sosc).second.print();
+    rdm.search(sol, e, sosc).second.print();
+
+    cout << "Program ended successfully" << endl;
 
     return 0;
 }
