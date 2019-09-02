@@ -1,3 +1,4 @@
+#pragma once
 #ifndef NPP_NSSEQSwap_H_
 #define NPP_NSSEQSwap_H_
 

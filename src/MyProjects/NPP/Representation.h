@@ -1,3 +1,4 @@
+#pragma once
 #ifndef NPP_REPRESENTATION_H_
 #define NPP_REPRESENTATION_H_
 
@@ -28,7 +29,17 @@ using MY_ADS = OPTFRAME_DEFAULT_ADS;
 //typedef int MY_ADS; // maybe try again in the future something like ADSNPP...
 
 //#include <ostream>
-//ostream & operator<< (ostream & s, RepNPP){}
+//ostream & operator<< (ostream & s, const &RepNPP r)
+//{
+//    bool space = false;
+//    for (int x : r) {
+//        if (space) {
+//            s << " ";
+//        }
+//        s << x;
+//        space = true;
+//    }
+//}
 
 #define PRINT(X) //{\
 //    std::cout << "|"; \

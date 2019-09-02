@@ -14,6 +14,11 @@ MyEvaluator::~MyEvaluator()
 
 Evaluation MyEvaluator::evaluate(const RepNPP& rep, const OptFrameADS* ads)
 {
+    return std::get<0>(this->evaluateAndPosition(rep, ads));
+}
+
+std::tuple<Evaluation, int> MyEvaluator::evaluateAndPosition(const RepNPP& rep, const OptFrameADS* ads)
+{
     // you can ignore parameter 'ads'
     // 'rep' is the representation of the solution
 
@@ -39,8 +44,7 @@ Evaluation MyEvaluator::evaluate(const RepNPP& rep, const OptFrameADS* ads)
     }
 
     PRINT(rep);
-//    cout << "fo " << fo << " i: " << selected << endl;
-    return Evaluation(fo);
+    return std::make_tuple(Evaluation(fo), selected);
 }
 
 

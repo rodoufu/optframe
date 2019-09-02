@@ -1,3 +1,4 @@
+#pragma once
 #ifndef NPP_CONSTRUCTIVE_Greedy_H_
 #define NPP_CONSTRUCTIVE_Greedy_H_
 

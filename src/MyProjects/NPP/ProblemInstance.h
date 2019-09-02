@@ -1,3 +1,4 @@
+#pragma once
 #ifndef NPP_PROBLEMINSTANCE_H_
 #define NPP_PROBLEMINSTANCE_H_
 

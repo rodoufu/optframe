@@ -1,3 +1,4 @@
+#pragma once
 #ifndef NPP_CONSTRUCTIVE_Rand_H_
 #define NPP_CONSTRUCTIVE_Rand_H_
 

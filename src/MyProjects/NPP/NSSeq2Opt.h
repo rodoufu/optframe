@@ -1,3 +1,4 @@
+#pragma once
 #ifndef NPP_NSSEQ2Opt_H_
 #define NPP_NSSEQ2Opt_H_
 

@@ -1,7 +1,9 @@
+#pragma once
 #ifndef NPP_EVALUATOR_H_
 #define NPP_EVALUATOR_H_
 
 //#include <cmath>
+#include <tuple>
 #include <stdlib.h>
 #include <math.h>
 
@@ -30,7 +32,8 @@ public:
 
     // you can replace OptFrameADS with your prefered ADS
 	Evaluation evaluate(const RepNPP& rep, const OptFrameADS* ads);
-	
+	std::tuple<Evaluation, int> evaluateAndPosition(const RepNPP& rep, const OptFrameADS* ads);
+
 	virtual bool isMinimization() const;
 };
 
