@@ -6,8 +6,8 @@ do
     for i in {1..3}
     do
         if [[ "$instance" -lt 10 ]]; then p_instance="0${instance}"; else p_instance="${instance}"; fi
-        echo "python3 generate_input.py ${size} 1 101010 ${instance} > ${p_instance}""_npp${size}.in"
-        python3 generate_input.py ${size} 1 101010 ${instance} > ${p_instance}_npp${size}.in
+        echo "python3 generate_input.py ${size} 1 101010 ${instance} > ${p_instance}""_npp_${size}.in"
+        python3 generate_input.py ${size} 1 101010 ${instance} > ${p_instance}_npp_${size}.in
         instance=$((instance + 1))
     done
 done

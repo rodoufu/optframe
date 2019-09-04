@@ -7,11 +7,16 @@
 #include <fstream>
 #include <memory>
 #include <utility>
+#include <tuple>
+#include <chrono>
+#include <future>
+
+#include <sys/types.h>
+#include <dirent.h>
 
 #include <stdlib.h>
 #include <math.h>
 
-// Breaking
 #include "../OptFrame/Heuristics/SA/BasicSimulatedAnnealing.hpp"
 #include "../OptFrame/Heuristics/LocalSearches/BestImprovement.hpp"
 #include "../OptFrame/Heuristics/LocalSearches/FirstImprovement.hpp"
@@ -28,54 +33,128 @@ using namespace std;
 using namespace optframe;
 using namespace NPP;
 
-int main(int argc, char **argv) {
-    RandGenMersenneTwister rg; // not using system rand() anymore
-
+void check(RandGenMersenneTwister &rg) {
     // Initialize here all your OptFrame components
     // (ProblemInstance, Evaluator, Constructive, ...)
-
     unique_ptr <ifstream> ifs(new std::ifstream("input/example.in", std::ifstream::in));
+    Scanner scanner(ifs.get());
+    ProblemInstance p(scanner);
+
+    CheckCommand<RepNPP> check;
+    MyEvaluator ev(p);
+    check.add(ev);
+
+    ConstructiveGreedy c1(p);
+    ConstructiveRand c2(p);
+    check.add(c1);
+    check.add(c2);
+
+    NSSeqBitFlip ns1(p, rg);
+    check.add(ns1);
+
+    check.run(10, 10);
+}
+
+tuple<SolutionNPP, Evaluation, double, SolutionNPP, Evaluation, double>
+solveSA(RandGenMersenneTwister &rg, string instance, bool print = false) {
+    unique_ptr <ifstream> ifs(new std::ifstream(instance, std::ifstream::in));
     Scanner scanner(ifs.get());
     ProblemInstance p(scanner);
     ifs->close();
 
     MyEvaluator ev(p);
-
     NSSeqBitFlip ns1(p, rg);
-//    NSSeq2Opt ns1(p, rg);
-//    NSSeqSwap ns2(p, rg);
-
     ConstructiveGreedy c1(p);
     ConstructiveRand c2(p);
 
-    CheckCommand<RepNPP> check;
-    check.add(ev);
-    check.add(c1);
-    check.add(c2);
-    check.add(ns1);
-//    check.add(ns2);
-
-    check.run(10, 10);
-
     NSSeq<RepNPP> *nsseq_bit = &ns1;
 
-    BasicSimulatedAnnealing <RepNPP, MY_ADS> sa(ev, c2, *nsseq_bit, 0.98, 100, 900.0, rg);
+    auto start = chrono::steady_clock::now();
+    BasicSimulatedAnnealing<RepNPP, MY_ADS> sa(ev, c2, *nsseq_bit, 0.98, 100, 900.0, rg, print);
     SOSC sosc; // stop criteria
-    unique_ptr<pair<SolutionNPP, Evaluation>> r(sa.search(sosc));
-    r->first.print();
-    r->second.print();
+    unique_ptr <pair<SolutionNPP, Evaluation>> r(sa.search(sosc));
+    auto end = chrono::steady_clock::now();
+    double saTime = chrono::duration_cast<chrono::milliseconds>(end - start).count() / 1000.0;
+    if (print) {
+        r->first.print();
+    }
+    if (print) {
+        r->second.print();
+    }
 
     BestImprovement<RepNPP, MY_ADS> bi(ev, ns1);
     FirstImprovement<RepNPP, MY_ADS> fi(ev, ns1);
+
     HillClimbing<RepNPP, MY_ADS> sd(ev, bi);
     HillClimbing<RepNPP, MY_ADS> pm(ev, fi);
     RandomDescentMethod<RepNPP, MY_ADS> rdm(ev, ns1, 10);
 
     auto sol = r->first;
     Evaluation e = ev.evaluate(sol.getR(), sol.getADSptr());
-    sd.search(sol, e, sosc).second.print();
-    pm.search(sol, e, sosc).second.print();
-    rdm.search(sol, e, sosc).second.print();
+
+    start = chrono::steady_clock::now();
+    std::future< pair<CopySolution<RepNPP, MY_ADS>&, Evaluation&>  > sdFuture = std::async([&]() {
+        HillClimbing<RepNPP, MY_ADS> sd1(ev, bi);
+        return sd1.search(sol, e, sosc);
+    });
+    auto sdResp = sd.search(sol, e, sosc);
+    auto best = sdResp;
+    if (print) {
+        sdResp.second.print();
+    }
+
+    auto pmResp = pm.search(sol, e, sosc);
+    if (print) {
+        pmResp.second.print();
+    }
+    if ((ev.isMinimization() && pmResp.second.evaluation() < best.second.evaluation()) ||
+        (ev.isMaximization() && pmResp.second.evaluation() > best.second.evaluation())) {
+        best = pmResp;
+    }
+
+    auto rdmResp = rdm.search(sol, e, sosc);
+    end = chrono::steady_clock::now();
+    if (print) {
+        rdmResp.second.print();
+    }
+    if ((ev.isMinimization() && rdmResp.second.evaluation() < best.second.evaluation()) ||
+        (ev.isMaximization() && rdmResp.second.evaluation() > best.second.evaluation())) {
+        best = rdmResp;
+    }
+
+    double lsTime = chrono::duration_cast<chrono::milliseconds>(end - start).count() / 1000.0;
+    return make_tuple(r->first, r->second, saTime, best.first, best.second, lsTime);
+}
+
+int main(int argc, char **argv) {
+    RandGenMersenneTwister rg; // not using system rand() anymore
+
+//    check(rg);
+
+//    for (auto &p: fs::directory_iterator("indput")) {
+//        cout << p.path() << '\n';
+//    }
+    string folder = "input";
+    DIR *dirp = opendir(folder.c_str());
+    struct dirent *dp;
+    cout << "file;sa;time(s);ls;time(s)" << endl;
+    while ((dp = readdir(dirp)) != NULL) {
+        string file = dp->d_name;
+        if (file != "." && file != ".." && file != "example.in" && file.find_last_of(".in") == file.length() - 1) {
+            cerr << file << endl;
+            for (int cont = 0; cont < 30; ++cont) {
+                auto resp = solveSA(rg, folder + "/" + file);
+                cout <<
+                     file << ";" <<
+                     get<1>(resp).evaluation() << ";" <<
+                     get<2>(resp) << ";" <<
+                     get<4>(resp).evaluation() << ";" <<
+                     get<5>(resp) << ";" <<
+                     endl;
+            }
+        }
+    }
+    closedir(dirp);
 
     cout << "Program ended successfully" << endl;
 

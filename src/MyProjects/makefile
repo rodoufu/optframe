@@ -3,7 +3,7 @@
 all: mctAppNPP
 
 mctAppNPP:      mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPScanner.o  NPPConstructiveRand.o NPPNSSeqBitFlip.o
-	g++ $(GCC_FLAGS) mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPScanner.o   NPPConstructiveRand.o NPPNSSeqBitFlip.o -o app_NPP
+	g++ $(GCC_FLAGS) mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPScanner.o   NPPConstructiveRand.o NPPNSSeqBitFlip.o -o app_NPP -lpthread
 
 mainNPP.o: mainNPP.cpp  NPP/Representation.h 
 	g++ -c $(GCC_FLAGS) mainNPP.cpp -o mainNPP.o
@@ -28,7 +28,8 @@ NPPScanner.o: ../OptFrame/Scanner++/Scanner.cpp
 
 
 
-GCC_FLAGS=-O3 --std=c++17 -fconcepts -D_GLIBCXX_DEBUG
+#GCC_FLAGS=-O3 --std=c++17 -fconcepts -D_GLIBCXX_DEBUG
+GCC_FLAGS=-O3 --std=c++17 -fconcepts
 
 examples:
 	make -C ../Examples/
