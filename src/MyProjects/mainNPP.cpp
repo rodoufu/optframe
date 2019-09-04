@@ -85,42 +85,42 @@ solveSA(RandGenMersenneTwister &rg, string instance, bool print = false) {
     BestImprovement<RepNPP, MY_ADS> bi(ev, ns1);
     FirstImprovement<RepNPP, MY_ADS> fi(ev, ns1);
 
-    HillClimbing<RepNPP, MY_ADS> sd(ev, bi);
-    HillClimbing<RepNPP, MY_ADS> pm(ev, fi);
-    RandomDescentMethod<RepNPP, MY_ADS> rdm(ev, ns1, 10);
-
     auto sol = r->first;
     Evaluation e = ev.evaluate(sol.getR(), sol.getADSptr());
 
+    vector < std::future < pair < CopySolution<RepNPP, MY_ADS> & , Evaluation &>>> futures;
     start = chrono::steady_clock::now();
-    std::future< pair<CopySolution<RepNPP, MY_ADS>&, Evaluation&>  > sdFuture = std::async([&]() {
+    futures.push_back(std::async([&]() {
         HillClimbing<RepNPP, MY_ADS> sd1(ev, bi);
         return sd1.search(sol, e, sosc);
-    });
-    auto sdResp = sd.search(sol, e, sosc);
-    auto best = sdResp;
-    if (print) {
-        sdResp.second.print();
-    }
+    }));
 
-    auto pmResp = pm.search(sol, e, sosc);
-    if (print) {
-        pmResp.second.print();
-    }
-    if ((ev.isMinimization() && pmResp.second.evaluation() < best.second.evaluation()) ||
-        (ev.isMaximization() && pmResp.second.evaluation() > best.second.evaluation())) {
-        best = pmResp;
-    }
+    futures.push_back(std::async([&]() {
+        HillClimbing<RepNPP, MY_ADS> pm(ev, fi);
+        return pm.search(sol, e, sosc);
+    }));
 
-    auto rdmResp = rdm.search(sol, e, sosc);
+    futures.push_back(std::async([&]() {
+        RandomDescentMethod<RepNPP, MY_ADS> rdm(ev, ns1, 10);
+        return rdm.search(sol, e, sosc);
+    }));
+
+    bool first = true;
+    pair < CopySolution<RepNPP, MY_ADS> & , Evaluation &> best(r->first, r->second);
+    for (auto &fut : futures) {
+        auto value = fut.get();
+        if (first) {
+            best = value;
+            first = false;
+        } else if ((ev.isMinimization() && value.second.evaluation() < value.second.evaluation()) ||
+                   (ev.isMaximization() && value.second.evaluation() > value.second.evaluation())) {
+            best = value;
+        }
+        if (print) {
+            value.second.print();
+        }
+    }
     end = chrono::steady_clock::now();
-    if (print) {
-        rdmResp.second.print();
-    }
-    if ((ev.isMinimization() && rdmResp.second.evaluation() < best.second.evaluation()) ||
-        (ev.isMaximization() && rdmResp.second.evaluation() > best.second.evaluation())) {
-        best = rdmResp;
-    }
 
     double lsTime = chrono::duration_cast<chrono::milliseconds>(end - start).count() / 1000.0;
     return make_tuple(r->first, r->second, saTime, best.first, best.second, lsTime);
@@ -129,11 +129,8 @@ solveSA(RandGenMersenneTwister &rg, string instance, bool print = false) {
 int main(int argc, char **argv) {
     RandGenMersenneTwister rg; // not using system rand() anymore
 
-//    check(rg);
+    check(rg);
 
-//    for (auto &p: fs::directory_iterator("indput")) {
-//        cout << p.path() << '\n';
-//    }
     string folder = "input";
     DIR *dirp = opendir(folder.c_str());
     struct dirent *dp;
