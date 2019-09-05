@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
     string folder = "input";
     DIR *dirp = opendir(folder.c_str());
     struct dirent *dp;
-    cout << "file;sa;time(s);ls;time(s)" << endl;
+    cout << "file;sa;timeSA;ls;timeLS" << endl;
     while ((dp = readdir(dirp)) != NULL) {
         string file = dp->d_name;
         if (file != "." && file != ".." && file != "example.in" && file.find_last_of(".in") == file.length() - 1) {
@@ -146,7 +146,7 @@ int main(int argc, char **argv) {
                      get<1>(resp).evaluation() << ";" <<
                      get<2>(resp) << ";" <<
                      get<4>(resp).evaluation() << ";" <<
-                     get<5>(resp) << ";" <<
+                     get<5>(resp) << "" <<
                      endl;
             }
         }
