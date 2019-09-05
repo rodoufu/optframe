@@ -47,11 +47,12 @@ private:
 	double alpha;
 	int SAmax;
 	double Ti;
+    bool verbose;
 
 public:
 
-	BasicSimulatedAnnealing(Evaluator<R, ADS, S>& _evaluator, Constructive<R, ADS, S>& _constructive, std::vector<NS<R, ADS, S>*> _neighbors, double _alpha, int _SAmax, double _Ti, RandGen& _rg) :
-		evaluator(_evaluator), constructive(_constructive), neighbors(_neighbors), rg(_rg)
+	BasicSimulatedAnnealing(Evaluator<R, ADS, S>& _evaluator, Constructive<R, ADS, S>& _constructive, std::vector<NS<R, ADS, S>*> _neighbors, double _alpha, int _SAmax, double _Ti, RandGen& _rg, bool _verbose = true) :
+		evaluator(_evaluator), constructive(_constructive), neighbors(_neighbors), rg(_rg), verbose(_verbose)
 	{
 		alpha = (_alpha);
 		SAmax = (_SAmax);
@@ -59,8 +60,8 @@ public:
 
 	}
 
-	BasicSimulatedAnnealing(Evaluator<R, ADS, S>& _evaluator, Constructive<R, ADS, S>& _constructive, NS<R, ADS, S>& _neighbors, double _alpha, int _SAmax, double _Ti, RandGen& _rg) :
-		evaluator(_evaluator), constructive(_constructive), rg(_rg)
+	BasicSimulatedAnnealing(Evaluator<R, ADS, S>& _evaluator, Constructive<R, ADS, S>& _constructive, NS<R, ADS, S>& _neighbors, double _alpha, int _SAmax, double _Ti, RandGen& _rg, bool _verbose = true) :
+		evaluator(_evaluator), constructive(_constructive), rg(_rg), verbose(_verbose)
 	{
 		neighbors.push_back(&_neighbors);
 		alpha = (_alpha);
@@ -76,7 +77,9 @@ public:
 	{
 		double timelimit = stopCriteria.timelimit;
 		double target_f = stopCriteria.target_f;
-		cout << "SA search(" << target_f << "," << timelimit << ")" << endl;
+		if (verbose) {
+		    cout << "SA search(" << target_f << "," << timelimit << ")" << endl;
+		}
 
 		Timer tnow;
 
@@ -124,8 +127,10 @@ public:
 						delete eStar;
 						eStar = &e.clone();
 
-						cout << "Best fo: " << e.evaluation() << " Found on Iter = " << iterT << " and T = " << T;
-						cout << endl;
+						if (verbose) {
+						    cout << "Best fo: " << e.evaluation() << " Found on Iter = " << iterT << " and T = " << T;
+						    cout << endl;
+						}
 					}
 				}
 				else
@@ -153,7 +158,9 @@ public:
 			T = alpha * T;
 			iterT = 0;
 		}
-                cout << "T=" << T << endl;
+		if (verbose) {
+            cout << "T=" << T << endl;
+		}
 
 		s = *sStar;
 		e = *eStar;
