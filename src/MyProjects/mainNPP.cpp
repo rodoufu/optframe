@@ -70,7 +70,10 @@ solveSA(RandGenMersenneTwister &rg, string instance, bool print = false) {
     NSSeq<RepNPP> *nsseq_bit = &ns1;
 
     auto start = chrono::steady_clock::now();
-    BasicSimulatedAnnealing<RepNPP, MY_ADS> sa(ev, c2, *nsseq_bit, 0.98, 100, 900.0, rg, print);
+    const double alpha = 0.98;
+    const int SAmax = 100;
+    double Ti = 900.0;
+    BasicSimulatedAnnealing<RepNPP, MY_ADS> sa(ev, c2, *nsseq_bit, alpha, SAmax, Ti, rg, print);
     SOSC sosc; // stop criteria
     unique_ptr <pair<SolutionNPP, Evaluation>> r(sa.search(sosc));
     auto end = chrono::steady_clock::now();

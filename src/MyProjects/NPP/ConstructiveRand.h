@@ -3,6 +3,7 @@
 #define NPP_CONSTRUCTIVE_Rand_H_
 
 #include "../../OptFrame/Constructive.hpp"
+#include "../../OptFrame/Util/RandGenMersenneTwister.hpp"
 
 #include "ProblemInstance.h"
 
@@ -25,12 +26,13 @@ class ConstructiveRand: public Constructive<RepNPP>
 {
 private:
    ProblemInstance& pNPP;
+    RandGenMersenneTwister &rg;
 
    // Your private vars
 
 public:
 	
-	ConstructiveRand(ProblemInstance& _pNPP);
+	ConstructiveRand(ProblemInstance& _pNPP, RandGenMersenneTwister &rg);
 	
 	virtual ~ConstructiveRand();
 

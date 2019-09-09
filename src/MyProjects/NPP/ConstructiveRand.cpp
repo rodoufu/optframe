@@ -2,8 +2,8 @@
 
 using namespace NPP;
 
-ConstructiveRand::ConstructiveRand(ProblemInstance& _pNPP): 
-        pNPP(_pNPP)
+ConstructiveRand::ConstructiveRand(ProblemInstance& _pNPP, RandGenMersenneTwister& _rg):
+        pNPP(_pNPP), rg(_rg)
 {
 }
 	
@@ -16,9 +16,7 @@ SolutionNPP* ConstructiveRand::generateSolution(double timelimit)
     RepNPP newRep;
 
     for (int i = 0; i < pNPP.getSize(); ++i) {
-        newRep.push_back(i);
+        newRep.push_back(rg.rand(2) == 1);
     }
-    std::random_shuffle(newRep.begin(), newRep.end());
-    // if no Solution can be built in timelimit, return nullptr.
-    return new SolutionNPP(newRep);			
+    return new SolutionNPP(newRep);
 }
