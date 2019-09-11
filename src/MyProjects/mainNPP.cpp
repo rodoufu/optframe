@@ -4,6 +4,7 @@
 // ===================================
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <memory>
 #include <utility>
@@ -36,7 +37,7 @@ using namespace NPP;
 void check(RandGenMersenneTwister &rg) {
     // Initialize here all your OptFrame components
     // (ProblemInstance, Evaluator, Constructive, ...)
-    unique_ptr <ifstream> ifs(new std::ifstream("input/example.in", std::ifstream::in));
+    unique_ptr<ifstream> ifs(new std::ifstream("input/example.in", std::ifstream::in));
     Scanner scanner(ifs.get());
     ProblemInstance p(scanner);
 
@@ -57,7 +58,7 @@ void check(RandGenMersenneTwister &rg) {
 
 tuple<SolutionNPP, Evaluation, double, SolutionNPP, Evaluation, double>
 solveSA(RandGenMersenneTwister &rg, string instance, bool print = false) {
-    unique_ptr <ifstream> ifs(new std::ifstream(instance, std::ifstream::in));
+    unique_ptr<ifstream> ifs(new std::ifstream(instance, std::ifstream::in));
     Scanner scanner(ifs.get());
     ProblemInstance p(scanner);
     ifs->close();
@@ -75,7 +76,7 @@ solveSA(RandGenMersenneTwister &rg, string instance, bool print = false) {
     double Ti = 900.0;
     BasicSimulatedAnnealing<RepNPP, MY_ADS> sa(ev, c2, *nsseq_bit, alpha, SAmax, Ti, rg, print);
     SOSC sosc; // stop criteria
-    unique_ptr <pair<SolutionNPP, Evaluation>> r(sa.search(sosc));
+    unique_ptr<pair<SolutionNPP, Evaluation>> r(sa.search(sosc));
     auto end = chrono::steady_clock::now();
     double saTime = chrono::duration_cast<chrono::milliseconds>(end - start).count() / 1000.0;
     if (print) {
@@ -91,7 +92,7 @@ solveSA(RandGenMersenneTwister &rg, string instance, bool print = false) {
     auto sol = r->first;
     Evaluation e = ev.evaluate(sol.getR(), sol.getADSptr());
 
-    vector < std::future < pair < CopySolution<RepNPP, MY_ADS> & , Evaluation &>>> futures;
+    vector<std::future<pair<CopySolution<RepNPP, MY_ADS> &, Evaluation &>>> futures;
     start = chrono::steady_clock::now();
     futures.push_back(std::async([&]() {
         HillClimbing<RepNPP, MY_ADS> sd1(ev, bi);
@@ -109,7 +110,7 @@ solveSA(RandGenMersenneTwister &rg, string instance, bool print = false) {
     }));
 
     bool first = true;
-    pair < CopySolution<RepNPP, MY_ADS> & , Evaluation &> best(r->first, r->second);
+    pair<CopySolution<RepNPP, MY_ADS> &, Evaluation &> best(r->first, r->second);
     for (auto &fut : futures) {
         auto value = fut.get();
         if (first) {
@@ -137,8 +138,8 @@ int main(int argc, char **argv) {
     string folder = "input";
     DIR *dirp = opendir(folder.c_str());
     struct dirent *dp;
-    cout << "file;sa;timeSA;ls;timeLS" << endl;
-    while ((dp = readdir(dirp)) != NULL) {
+    cout << "file;SA;timeSA;LS;timeLS" << endl;
+    while ((dp = readdir(dirp)) != nullptr) {
         string file = dp->d_name;
         if (file != "." && file != ".." && file != "example.in" && file.find_last_of(".in") == file.length() - 1) {
             cerr << file << endl;
@@ -146,10 +147,10 @@ int main(int argc, char **argv) {
                 auto resp = solveSA(rg, folder + "/" + file);
                 cout <<
                      file << ";" <<
-                     get<1>(resp).evaluation() << ";" <<
-                     get<2>(resp) << ";" <<
-                     get<4>(resp).evaluation() << ";" <<
-                     get<5>(resp) << "" <<
+                     std::fixed << std::setprecision(0) << get<1>(resp).evaluation() << ";" <<
+                     std::fixed << std::setprecision(5) << get<2>(resp) << ";" <<
+                     std::fixed << std::setprecision(0) << get<4>(resp).evaluation() << ";" <<
+                     std::fixed << std::setprecision(5) << get<5>(resp) << "" <<
                      endl;
             }
         }

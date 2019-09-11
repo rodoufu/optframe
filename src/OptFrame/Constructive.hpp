@@ -22,6 +22,7 @@
 #define OPTFRAME_CONSTRUCTIVE_HPP_
 
 #include "Solution.hpp"
+#include "BaseSolution.h"
 #include "Solutions/CopySolution.hpp"
 
 namespace optframe {
