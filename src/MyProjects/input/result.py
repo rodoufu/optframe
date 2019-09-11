@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-df = pd.read_csv("result.csv", sep=';')
+df = pd.read_csv("result-alpha098_SAmax100_Ti900.csv", sep=';')
 df['file'] = df['file'].map(lambda x: x[:-3])
 df['seed'] = df['file'].map(lambda x: int(x.split('_')[0]))
 df['size'] = df['file'].map(lambda x: int(x.split('_')[2]))
