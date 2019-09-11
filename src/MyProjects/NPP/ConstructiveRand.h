@@ -2,8 +2,8 @@
 #ifndef NPP_CONSTRUCTIVE_Rand_H_
 #define NPP_CONSTRUCTIVE_Rand_H_
 
-#include "../../OptFrame/Constructive.hpp"
-#include "../../OptFrame/Util/RandGenMersenneTwister.hpp"
+#include "OptFrame/Constructive.hpp"
+#include "OptFrame/Util/RandGenMersenneTwister.hpp"
 
 #include "ProblemInstance.h"
 

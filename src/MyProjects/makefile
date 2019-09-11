@@ -3,28 +3,28 @@
 all: mctAppNPP
 
 mctAppNPP:      mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPScanner.o  NPPConstructiveRand.o NPPNSSeqBitFlip.o
-	g++ $(GCC_FLAGS) mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPScanner.o   NPPConstructiveRand.o NPPNSSeqBitFlip.o -o app_NPP -lpthread
+	g++ -I.. $(GCC_FLAGS) mainNPP.o  NPPProblemInstance.o  NPPEvaluator.o NPPConstructiveGreedy.o  NPPScanner.o   NPPConstructiveRand.o NPPNSSeqBitFlip.o -o app_NPP -lpthread
 
 mainNPP.o: mainNPP.cpp  NPP/Representation.h 
-	g++ -c $(GCC_FLAGS) mainNPP.cpp -o mainNPP.o
+	g++ -I.. -c $(GCC_FLAGS) mainNPP.cpp -o mainNPP.o
 	
 NPPProblemInstance.o: NPP/ProblemInstance.cpp NPP/ProblemInstance.h
-	g++ -c $(GCC_FLAGS) NPP/ProblemInstance.cpp -o NPPProblemInstance.o
+	g++ -I.. -c $(GCC_FLAGS) NPP/ProblemInstance.cpp -o NPPProblemInstance.o
 	
 NPPEvaluator.o: NPP/Evaluator.cpp NPP/Evaluator.h
-	g++ -c $(GCC_FLAGS) NPP/Evaluator.cpp -o NPPEvaluator.o
+	g++ -I.. -c $(GCC_FLAGS) NPP/Evaluator.cpp -o NPPEvaluator.o
 	
 NPPConstructiveGreedy.o: NPP/ConstructiveGreedy.cpp NPP/ConstructiveGreedy.h
-	g++ -c $(GCC_FLAGS) NPP/ConstructiveGreedy.cpp -o NPPConstructiveGreedy.o
+	g++ -I.. -c $(GCC_FLAGS) NPP/ConstructiveGreedy.cpp -o NPPConstructiveGreedy.o
 
 NPPConstructiveRand.o: NPP/ConstructiveRand.cpp NPP/ConstructiveRand.h
-	g++ -c $(GCC_FLAGS) NPP/ConstructiveRand.cpp -o NPPConstructiveRand.o
+	g++ -I.. -c $(GCC_FLAGS) NPP/ConstructiveRand.cpp -o NPPConstructiveRand.o
 
 NPPNSSeqBitFlip.o: NPP/NSSeqBitFlip.cpp NPP/NSSeqBitFlip.h
-	g++ -c $(GCC_FLAGS) NPP/NSSeqBitFlip.cpp -o NPPNSSeqBitFlip.o
+	g++ -I.. -c $(GCC_FLAGS) NPP/NSSeqBitFlip.cpp -o NPPNSSeqBitFlip.o
 	
 NPPScanner.o: ../OptFrame/Scanner++/Scanner.cpp
-	g++ -c $(GCC_FLAGS) ../OptFrame/Scanner++/Scanner.cpp -o NPPScanner.o
+	g++ -I.. -c $(GCC_FLAGS) ../OptFrame/Scanner++/Scanner.cpp -o NPPScanner.o
 
 
 

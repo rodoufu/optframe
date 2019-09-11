@@ -4,10 +4,10 @@
 
 #include <vector>
 
-#include "../../OptFrame/Util/printable.h"
-#include "../../OptFrame/Util/Matrix.hpp"
-#include "../../OptFrame/Solution.hpp"
-#include "../../OptFrame/Solutions/CopySolution.hpp"
+#include "OptFrame/Util/printable.h"
+#include "OptFrame/Util/Matrix.hpp"
+#include "OptFrame/Solution.hpp"
+#include "OptFrame/Solutions/CopySolution.hpp"
 
 
 #include <vector>

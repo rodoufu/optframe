@@ -5,8 +5,8 @@
 #include <iostream>
 #include <vector>
 
-#include "../../OptFrame/Scanner++/Scanner.h"
-#include "../../OptFrame/Component.hpp"
+#include "OptFrame/Scanner++/Scanner.h"
+#include "OptFrame/Component.hpp"
 
 using namespace scannerpp;
 using namespace optframe;
@@ -37,4 +37,3 @@ public:
 }
 
 #endif /*NPP_PROBLEMINSTANCE_H_*/
-

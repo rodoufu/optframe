@@ -2,7 +2,7 @@
 #ifndef NPP_CONSTRUCTIVE_Greedy_H_
 #define NPP_CONSTRUCTIVE_Greedy_H_
 
-#include "../../OptFrame/Constructive.hpp"
+#include "OptFrame/Constructive.hpp"
 
 #include "ProblemInstance.h"
 

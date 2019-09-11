@@ -2,13 +2,12 @@
 #ifndef NPP_EVALUATOR_H_
 #define NPP_EVALUATOR_H_
 
-//#include <cmath>
 #include <tuple>
 #include <stdlib.h>
 #include <math.h>
 
-#include "../../OptFrame/Evaluation.hpp"
-#include "../../OptFrame/Evaluator.hpp"
+#include "OptFrame/Evaluation.hpp"
+#include "OptFrame/Evaluator.hpp"
 
 #include "Representation.h"
 #include "ProblemInstance.h"

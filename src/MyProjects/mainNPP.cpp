@@ -17,15 +17,15 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "../OptFrame/Heuristics/SA/BasicSimulatedAnnealing.hpp"
-#include "../OptFrame/Heuristics/LocalSearches/BestImprovement.hpp"
-#include "../OptFrame/Heuristics/LocalSearches/FirstImprovement.hpp"
-#include "../OptFrame/Heuristics/LocalSearches/HillClimbing.hpp"
-#include "../OptFrame/Heuristics/LocalSearches/RandomDescentMethod.hpp"
-#include "../OptFrame/Util/CheckCommand.hpp"
-#include "../OptFrame/SingleObjSearch.hpp"
-#include "../OptFrame/Util/RandGenMersenneTwister.hpp"
-#include "../OptFrame/Util/printable.h"
+#include "OptFrame/Heuristics/SA/BasicSimulatedAnnealing.hpp"
+#include "OptFrame/Heuristics/LocalSearches/BestImprovement.hpp"
+#include "OptFrame/Heuristics/LocalSearches/FirstImprovement.hpp"
+#include "OptFrame/Heuristics/LocalSearches/HillClimbing.hpp"
+#include "OptFrame/Heuristics/LocalSearches/RandomDescentMethod.hpp"
+#include "OptFrame/Util/CheckCommand.hpp"
+#include "OptFrame/SingleObjSearch.hpp"
+#include "OptFrame/Util/RandGenMersenneTwister.hpp"
+#include "OptFrame/Util/printable.h"
 
 #include "NPP.h"
 
@@ -45,7 +45,7 @@ void check(RandGenMersenneTwister &rg) {
     check.add(ev);
 
     ConstructiveGreedy c1(p);
-    ConstructiveRand c2(p);
+    ConstructiveRand c2(p, rg);
     check.add(c1);
     check.add(c2);
 
@@ -65,7 +65,7 @@ solveSA(RandGenMersenneTwister &rg, string instance, bool print = false) {
     MyEvaluator ev(p);
     NSSeqBitFlip ns1(p, rg);
     ConstructiveGreedy c1(p);
-    ConstructiveRand c2(p);
+    ConstructiveRand c2(p, rg);
 
     NSSeq<RepNPP> *nsseq_bit = &ns1;
 
