@@ -7,7 +7,7 @@ files = [
     "result_max-alpha098_SAMax100_Ti900_10.csv",
 ]
 
-df = pd.read_csv(files[0], sep=';')
+df = pd.read_csv(files[1], sep=';')
 df['file'] = df['file'].map(lambda x: x[:-3])
 df['seed'] = df['file'].map(lambda x: int(x.split('_')[0]))
 df['size'] = df['file'].map(lambda x: int(x.split('_')[2]))
