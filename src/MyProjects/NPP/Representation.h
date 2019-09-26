@@ -41,15 +41,15 @@ using MY_ADS = OPTFRAME_DEFAULT_ADS;
 //    }
 //}
 
-#define PRINT(X) //{\
-//    std::cout << "|"; \
-//    for (auto &x : (X)) { \
-//        std::cout << x << " "; \
-//    } \
-//    std::cout << "|"; }
-//#define PRINTLN(X) {\
-//    PRINT(X); \
-//    std::cout << std::endl; }
+#define PRINT(X) /*{\
+    std::cout << "|"; \
+    for (auto &x : (X)) { \
+        std::cout << x << " "; \
+    } \
+    std::cout << "|"; }
+#define PRINTLN(X) {\
+    PRINT(X); \
+    std::cout << std::endl; }*/
 
 #endif /*NPP_REPRESENTATION_H_*/
 

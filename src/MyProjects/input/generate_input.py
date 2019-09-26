@@ -1,9 +1,11 @@
+#!/usr/bin/env python3
+
 import sys
 import random
 
 if __name__ == '__main__':
     size = int(sys.argv[1])
-    min_val, max_val = 1, 1001
+    min_val, max_val = 1, 2_147_483_647
     if len(sys.argv) > 2:
         min_val = int(sys.argv[2])
     if len(sys.argv) > 3:
